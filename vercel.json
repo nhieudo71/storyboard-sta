@@ -1,0 +1,8 @@
+
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "env": {
+    "APP_GEMINI_API_KEY": "@app_gemini_api_key"
+  }
+}
