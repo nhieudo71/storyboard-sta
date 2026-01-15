@@ -2,11 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { WorkflowStep, WorkflowOutput } from "../types";
 
-// Removed global ai instantiation.
-// The AI client will now be instantiated inside the generateStep function
-// to ensure it uses the process.env.API_KEY at the time of the API call,
-// making it more resilient to environment variable issues on Vercel.
-
 const SYSTEM_INSTRUCTION = `BẠN LÀ MỘT HỆ THỐNG AI CHUYÊN TẠO NỘI DUNG YOUTUBE FACELESS TÀI CHÍNH CÁ NHÂN CHO NGƯỜI ĐI LÀM.
 NGUYÊN TẮC BẮT BUỘC:
 - Faceless 100%, không nhân vật, không kể chuyện cá nhân.
@@ -21,10 +16,25 @@ export const generateStep = async (
   inputs: { scriptPrompt: string; title: string },
   currentOutput: WorkflowOutput
 ): Promise<string> => {
+  // Determine apiKey safely for browser environments where 'process' might not exist.
+  // Prioritize window.APP_GEMINI_API_KEY which is injected via index.html on Vercel.
+  const apiKey: string | undefined = 
+    (typeof window !== 'undefined' && (window as any).APP_GEMINI_API_KEY)
+      ? (window as any).APP_GEMINI_API_KEY
+      : (typeof process !== 'undefined' && process.env && process.env.API_KEY) 
+          ? process.env.API_KEY 
+          : undefined;
+  
+  if (!apiKey || apiKey === "%.%APP_GEMINI_API_KEY%.%") { // Also check if Vercel failed to inject the variable
+    // If API_KEY is not found (either process is undefined or API_KEY itself is not set),
+    // throw an explicit error that can be caught by the App's try-catch.
+    // This prevents 'new GoogleGenAI' from potentially crashing synchronously with 'undefined' key,
+    // and provides a clear message to the user.
+    throw new Error("API Key (APP_GEMINI_API_KEY) is missing or not accessible. Please ensure it is configured correctly in your Vercel project environment variables.");
+  }
+
   // Instantiate Gemini API client right before making the API call.
-  // This helps catch issues with process.env.API_KEY being undefined or invalid
-  // at the point of use, which can lead to a blank screen on deployment if not handled.
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
 
   // Complex Text Tasks use gemini-3-pro-preview
   const model = "gemini-3-pro-preview";

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,82 +18,59 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .serif {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Playfair+Display', serif;
         }
         /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        .dark ::-webkit-scrollbar-track { background: #1a1a1a; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #333; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@18.2.0",
-        "react-dom": "https://esm.sh/react-dom@18.2.0/client",
-        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
-      }
-    }
-    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.36.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+  }
+}
+</script>
+<script>
+  // Inject Vercel environment variable directly into the global scope for client-side access.
+  // This is a common pattern for static sites without a build bundler to expose env vars.
+  // Make sure to set APP_GEMINI_API_KEY in your Vercel project environment variables.
+  window.APP_GEMINI_API_KEY = "%.%APP_GEMINI_API_KEY%.%";
+</script>
 </head>
 <body class="bg-neutral-50 dark:bg-[#0a0a0a] text-neutral-900 dark:text-neutral-100">
     <div id="root"></div>
-
-    <script type="module">
-        import React, { useState } from 'react';
-        import { createRoot } from 'react-dom';
-        import { Wallet, TrendingUp, Sparkles } from 'lucide-react';
-
-        function App() {
-            const [isDark, setIsDark] = useState(false);
-
-            const toggleDarkMode = () => {
-                document.documentElement.classList.toggle('dark');
-                setIsDark(!isDark);
-            };
-
-            return (
-                <div className="min-h-screen p-8">
-                    <nav className="flex justify-between items-center mb-12">
-                        <h1 className="serif text-3xl font-bold tracking-tight">Finance <span className="text-blue-600">Faceless AI</span></h1>
-                        <button 
-                            onClick={toggleDarkMode}
-                            className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-800"
-                        >
-                            {isDark ? '☀️ Light' : '🌙 Dark'}
-                        </button>
-                    </nav>
-
-                    <main className="max-w-4xl mx-auto text-center mt-20">
-                        <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 text-sm mb-6">
-                            <Sparkles size={16} className="mr-2" />
-                            AI-Powered Financial Insights
-                        </div>
-                        <h2 className="serif text-5xl md:text-6xl font-medium mb-6">
-                            Quản lý tài chính <br/> không cần lộ diện.
-                        </h2>
-                        <p className="text-neutral-500 dark:text-neutral-400 text-lg mb-10 max-w-2xl mx-auto">
-                            Sử dụng sức mạnh của Gemini AI để phân tích xu hướng thị trường và tối ưu hóa danh mục đầu tư của bạn một cách bảo mật.
-                        </p>
-                        
-                        <div className="flex gap-4 justify-center">
-                            <button className="bg-neutral-900 dark:bg-white dark:text-black text-white px-8 py-3 rounded-lg font-medium transition-transform hover:scale-105">
-                                Bắt đầu ngay
-                            </button>
-                            <button className="border border-neutral-300 dark:border-neutral-700 px-8 py-3 rounded-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                                Xem Demo
-                            </button>
-                        </div>
-                    </main>
-                </div>
-            );
-        }
-
-        const root = createRoot(document.getElementById('root'));
-        root.render(React.createElement(App));
-    </script>
 </body>
 </html>

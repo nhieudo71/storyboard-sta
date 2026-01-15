@@ -156,16 +156,19 @@ export default function App() {
         const newOutputs = { ...outputs, [getOutputKey(stepConfig.id)]: result };
         setOutputs(newOutputs);
         setCurrentStepIndex(prev => prev + 1);
-      } catch (error: any) { // Explicitly type error as any for more flexible checks
+      } catch (error: any) {
         console.error("Step failed:", error);
         setIsLoading(false);
         workflowRunningRef.current = false;
         let errorMessage = "Có lỗi xảy ra trong quá trình tạo nội dung. Vui lòng thử lại.";
+        
         if (error instanceof Error) {
-          if (error.message.includes("API key") || error.message.includes("authentication")) {
-            errorMessage = "Lỗi xác thực API. Vui lòng kiểm tra lại cấu hình API KEY trên Vercel hoặc môi trường triển khai của bạn.";
+          if (error.message.includes("API Key (APP_GEMINI_API_KEY) is missing")) {
+            errorMessage = "Lỗi: API Key (APP_GEMINI_API_KEY) chưa được cấu hình. Vui lòng thêm biến môi trường 'APP_GEMINI_API_KEY' vào cài đặt Vercel của bạn.";
+          } else if (error.message.includes("API key") || error.message.includes("authentication")) {
+            errorMessage = "Lỗi xác thực API. Vui lòng kiểm tra lại API Key trên Vercel hoặc môi trường triển khai của bạn.";
           } else if (error.message.includes("network") || error.message.includes("fetch")) {
-            errorMessage = "Lỗi kết nối mạng. Vui lòng kiểm tra internet của bạn hoặc thử lại sau.";
+            errorMessage = "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet hoặc thử lại sau.";
           }
         }
         alert(errorMessage);
